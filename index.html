@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculador de Sucesiones | Microservicio</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <section class="wizard-section">
+
+            <div id="question-card" class="card">
+    <h2 id="question-text">¿Existe un testamento?</h2>
+    
+    <div id="options-bool" class="options">
+        <button class="btn-opt" id="btn-si">SÍ</button>
+        <button class="btn-opt" id="btn-no">NO</button>
+    </div>
+
+    <div id="options-num" class="options" style="display: none;">
+        <input type="number" id="input-cant" value="1" min="1" class="input-dark">
+        <button class="btn-opt" id="btn-confirmar">CONFIRMAR</button>
+    </div>
+
+    <div id="options-text" class="options" style="display: none;">
+    <input type="text" id="input-texto" placeholder="Ingrese nombre..." class="input-dark">
+    <button class="btn-opt" id="btn-confirmar-texto">CONFIRMAR</button>
+</div>
+    
+    <p id="ayuda-texto" class="ayuda"></p>
+</div>
+
+            <div class="info-acervo">
+                <p>
+                    <i class="fas fa-balance-scale"></i>
+                    <strong>Nota:</strong> El
+                    <em>Acervo Hereditario</em> esta compuesto por la totalidad de los <strong>bienes propios</strong>
+                    del causante y el <strong>50% de los bienes gananciales</strong>.
+                </p>
+            </div>
+
+        </section>
+
+        <section class="visual-section">
+            <div style="width: 300px; height: 300px;">
+                <canvas id="inheritanceChart"></canvas>
+            </div>
+            <div id="summary">
+                <p>Legítima: <span id="legitima-val">100%</span></p>
+                <p>Disponible: <span id="disponible-val">0%</span></p>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>

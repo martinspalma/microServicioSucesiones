@@ -1,0 +1,116 @@
+:root {
+   --bg-dark: #1e2229; 
+    --card-bg: #2d323c;
+    --accent: #ff8c00; 
+    --text-light: #f4f4f4;
+    --text-muted: #a0aab4;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background: radial-gradient(circle, #2c313c 0%, #1e2229 100%);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background: radial-gradient(circle, #84a2e2 0%, #1e2229 100%);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.wizard-section, .visual-section {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    width: 100%;
+}
+
+h2 {
+    color: var(--accent);
+    margin-bottom: 2rem;
+}
+
+.options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-opt {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-opt:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+#summary {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+span {
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+.info-acervo {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 140, 0, 0.05); /* Un sutil tinte naranja */
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+.info-acervo p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.info-acervo strong {
+    color: var(--accent);
+}
