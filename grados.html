@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Referencia de Grados de Parentesco</title>
+    <style>
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --accent: #ff8c00;
+            --text: #e0e0e0;
+            --line: #444;
+            --blue: #00bcd4;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { color: var(--accent); margin-bottom: 30px; }
+
+        table {
+            border-collapse: collapse;
+            width: 900px;
+            background: var(--card);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+        }
+
+        th {
+            background: #252525;
+            color: var(--blue);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        tr:hover { background: rgba(255, 255, 255, 0.03); }
+
+        .grado-num {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.1rem;
+            width: 100px;
+        }
+
+        .linea-desc { color: #8bc34a; font-weight: bold; }
+        .linea-asc { color: #f1c40f; font-weight: bold; }
+        .linea-col { color: #e91e63; font-weight: bold; }
+
+        .nota {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #888;
+            max-width: 900px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CÓMPUTO DE PARENTESCO (CCCN)</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Grado</th>
+                <th>Línea Recta Descendiente</th>
+                <th>Línea Recta Ascendiente</th>
+                <th>Línea Colateral</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="grado-num">1°</td>
+                <td>Hijos</td>
+                <td>Padres</td>
+                <td>---</td>
+            </tr>
+            <tr>
+                <td class="grado-num">2°</td>
+                <td>Nietos</td>
+                <td>Abuelos</td>
+                <td>Hermanos</td>
+            </tr>
+            <tr>
+                <td class="grado-num">3°</td>
+                <td>Bisnietos</td>
+                <td>Bisabuelos</td>
+                <td>Sobrinos / Tíos</td>
+            </tr>
+            <tr>
+                <td class="grado-num">4°</td>
+                <td>Tataranietos</td>
+                <td>Tatarabuelos</td>
+                <td>Primos / Sobrinos Nietos / Tíos Abuelos</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="nota">
+        <p><strong>Notas Técnicas:</strong></p>
+        <ul>
+            <li><strong>Línea Recta:</strong> Se cuenta un grado por cada generación (hijo-padre-abuelo).</li>
+            <li><strong>Línea Colateral:</strong> Se sube hasta el tronco común y se baja hasta el pariente (Ej: para hermanos: hijo -> padre -> hermano = 2 grados).</li>
+            <li><strong>Afinidad:</strong> El cónyuge ocupa el mismo grado y línea que su esposo/a respecto a la familia de este (Art. 536).</li>
+        </ul>
+    </div>
+
+</body>
+</html>
