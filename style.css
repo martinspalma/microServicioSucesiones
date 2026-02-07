@@ -114,3 +114,222 @@ span {
 .info-acervo strong {
     color: var(--accent);
 }
+
+/* HEADER STYLES */
+:root {
+    --bg-dark: #1e2229; 
+    --card-bg: #2d323c;
+    --accent: #ff8c00; 
+    --text-light: #f4f4f4;
+    --text-muted: #a0aab4;
+    --line: #444; /* Variable faltante en tu código original */
+}
+
+/* CORRECCIÓN: Eliminamos el centrado flex del body para que el header suba */
+body {
+    background-color: var(--bg-dark);
+    background: radial-gradient(circle, #2c313c 0%, #1e2229 100%);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* Cambiamos a columna */
+    align-items: center;
+}
+
+/* BARRA SUPERIOR FIJA ARRIBA */
+.navbar {
+    width: 100%;
+    background-color: #1a1a1a;
+    border-bottom: 2px solid var(--accent);
+    padding: 0.8rem 0;
+    position: fixed; /* Fijado arriba */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-item {
+    background: #252525;
+    border: 1px solid var(--line);
+    color: var(--text-light);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.nav-item:hover {
+    background: var(--accent);
+    color: #000;
+}
+
+/* CONTENEDOR PRINCIPAL CON ESPACIO PARA EL HEADER */
+.app-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem;
+    margin-top: 80px; /* Margen para que el header fijo no pise la app */
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* RESTO DE ESTILOS MANTENIDOS */
+.wizard-section, .visual-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+h2 {
+    color: var(--accent);
+    margin-bottom: 2rem;
+}
+
+.options {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-opt {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-opt:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+.info-acervo {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 140, 0, 0.05);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+}
+
+/* RESPONSIVE MOBILE */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .hamburger { display: block; }
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: #1a1a1a;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        width: 200px;
+    }
+    .nav-links.show { display: flex; }
+    .app-container { flex-direction: column; }
+}
+
+/* Estilos para la barra lateral del informe */
+.report-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.vertical-bar-container {
+    width: 30px;
+    height: 300px;
+    background: #333;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    flex-shrink: 0; /* Que no se achique */
+}
+
+.bar-seg { transition: height 0.5s ease; width: 100%; }
+.seg-leg { background: #5a6268; }
+.seg-ley { background: #888; }
+.seg-test { background: var(--accent); }
+
+/* Contenedor principal del informe para aprovechar el ancho */
+.report-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0; /* Pegado al borde */
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+/* El área de la tabla */
+.report-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* La barra lateral ancha */
+.report-sidebar-bar {
+    width: 60px; /* Más ancha */
+    display: flex;
+    flex-direction: column;
+    background: #222;
+    border-left: 1px solid var(--line);
+}
+
+.bar-seg { width: 100%; transition: height 0.5s ease; }
+.seg-leg { background: #444; }
+.seg-ley { background: #777; }
+.seg-test { background: var(--accent); }

@@ -610,3 +610,97 @@ function bootstrap() {
     if (btnConfTxt) btnConfTxt.onclick = () => handleAnswer(null);
 }
 document.addEventListener('DOMContentLoaded', bootstrap);
+
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Sucesiones | Microservicio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-content">
+            <div class="brand">
+                <i class="fas fa-balance-scale"></i>
+                <span>Simulador Sucesiones</span>
+            </div>
+            
+            <button class="hamburger" id="btn-hamburguesa">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav class="nav-links" id="menu-links">
+                <button type="button" class="nav-item" onclick="window.open('mapa.html', '_blank')">
+                    <i class="fas fa-map"></i> Mapa Sucesorio
+                </button>
+                <button type="button" class="nav-item" onclick="window.open('grados.html', '_blank')">
+                    <i class="fas fa-layer-group"></i> Mapa de Grados
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <section class="wizard-section">
+            <div id="question-card" class="card">
+                <h2 id="question-text">¿Existe un testamento?</h2>
+                
+                <div id="options-bool" class="options">
+                    <button class="btn-opt" id="btn-si">SÍ</button>
+                    <button class="btn-opt" id="btn-no">NO</button>
+                </div>
+
+                <div id="options-select" style="display:none;"></div>
+
+                <div id="options-num" class="options" style="display: none;">
+                    <input type="number" id="input-cant" value="1" min="1" class="input-dark">
+                    <button class="btn-opt" id="btn-confirmar">CONFIRMAR</button>
+                </div>
+
+                <div id="options-text" class="options" style="display: none;">
+                    <input type="text" id="input-texto" placeholder="Ingrese nombre..." class="input-dark">
+                    <button class="btn-opt" id="btn-confirmar-texto">CONFIRMAR</button>
+                </div>
+                
+                <p id="ayuda-texto" class="ayuda"></p>
+            </div>
+
+            <div class="info-acervo">
+                <p>
+                    <i class="fas fa-balance-scale"></i>
+                    <strong>Nota:</strong> El
+                    <em>Acervo Hereditario</em> está compuesto por la totalidad de los <strong>bienes propios</strong>
+                    del causante y el <strong>50% de los bienes gananciales</strong>.
+                </p>
+            </div>
+        </section>
+
+        <section class="visual-section">
+            <div class="chart-box">
+                <canvas id="inheritanceChart"></canvas>
+            </div>
+            <div id="summary">
+                <p>Legítima: <span id="legitima-val">100%</span></p>
+                <p>Disponible: <span id="disponible-val">0%</span></p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const btnMenu = document.getElementById('btn-hamburguesa');
+        const menuLinks = document.getElementById('menu-links');
+
+        btnMenu.addEventListener('click', () => {
+            menuLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
