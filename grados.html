@@ -69,8 +69,21 @@
             line-height: 1.4;
         }
     </style>
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <header class="navbar">
+    <div class="navbar-content">
+        <div class="brand">
+            <i class="fas fa-balance-scale"></i>
+            <span>Simulador Sucesiones</span>
+        </div>
+        <button class="hamburger" id="btn-hamburguesa"><i class="fas fa-bars"></i></button>
+        <nav class="nav-links" id="menu-links">
+            <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+            </nav>
+    </div>
+</header>
 
     <h1>CÓMPUTO DE PARENTESCO (CCCN)</h1>
 
@@ -121,4 +134,9 @@
     </div>
 
 </body>
+<script>
+    const btnMenu = document.getElementById('btn-hamburguesa');
+    const menuLinks = document.getElementById('menu-links');
+    btnMenu.addEventListener('click', () => { menuLinks.classList.toggle('show'); });
+</script>
 </html>
