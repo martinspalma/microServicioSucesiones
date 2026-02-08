@@ -675,9 +675,9 @@ function renderizarListaMejoras() {
 
 function ejecutarGuardarMejora() {
     const nom = document.getElementById('mejora-nombre').value;
-   const vinculoSeleccionado = document.getElementById('mejora-vinculo').value;
+    const vinculoSeleccionado = document.getElementById('mejora-vinculo').value;
     const por = parseFloat(document.getElementById('mejora-rango').value);
-    
+
 
     if (nom && por > 0) {
         estadoSucesion.mejoras2448.push({ nombre: nom, vinculo: vinculoSeleccionado, porcentaje: por });
@@ -857,8 +857,8 @@ function mostrarResultadoFinal() {
                     <tr style="color:#ff8c00; border-bottom:2px solid #ff8c00">
                         <th style="padding:10px; text-align:left;">Heredero / Estirpe</th>
                         ${vistaDual
-                        ? '<th style="padding:10px">B. Propios</th><th style="padding:10px">B. Gananciales</th>'
-                        : '<th style="padding:10px">Porcentaje Total</th>'}
+                ? '<th style="padding:10px">B. Propios</th><th style="padding:10px">B. Gananciales</th>'
+                : '<th style="padding:10px">Porcentaje Total</th>'}
                     </tr>
                 </thead>
                 <tbody>`;
@@ -917,7 +917,7 @@ function mostrarResultadoFinal() {
                             </tr>
                         </thead>
                         <tbody>`;
-            
+
             estadoSucesion.mejoras2448.forEach(m => {
                 innerContent += `
                     <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
@@ -955,24 +955,32 @@ function mostrarResultadoFinal() {
         }
     }
 
-    // 4. ENSAMBLAJE FINAL
-    const fullReportHtml = `
-        <div style="max-width: 900px; margin: 0 auto; padding: 10px;">
-            ${headerHtml}
-            <div class="report-wrapper" style="display: flex; background: var(--card-bg); border: 1px solid #444; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                <div class="report-content" style="flex: 1; padding: 30px;">
-                    ${innerContent}
+    // 4. ENSAMBLAJE FINAL (BARRA HORIZONTAL UNIFICADA)
+const fullReportHtml = `
+    <div class="report-container-final">
+        ${headerHtml}
+        <div class="report-wrapper">
+            <div class="report-content">
+                ${innerContent}
+            </div>
+            <div class="report-sidebar-bar">
+                <div class="bar-seg seg-leg" style="width: ${hLeg}%; height: 100%;" title="Legítima">
+                    ${hLeg > 10 ? `<span>${hLeg.toFixed(0)}%</span>` : ''}
                 </div>
-                <div class="report-sidebar-bar" style="width: 50px; display: flex; flex-direction: column; background: #1a1d23; border-left: 1px solid #444;">
-                    <div class="bar-seg" style="height: ${hLeg}%; background: #5a6268; border-bottom: 1px solid #333;" title="Legítima"></div>
-                    <div class="bar-seg" style="height: ${hLey}%; background: #888; border-bottom: 1px solid #333;" title="Saldo por Ley"></div>
-                    <div class="bar-seg" style="height: ${porcTotalMejoras}%; background: #b35900; border-bottom: 1px solid #333;" title="Mejora Art. 2448"></div>
-                    <div class="bar-seg" style="height: ${hTest}%; background: var(--accent);" title="Testamento"></div>
+                <div class="bar-seg seg-ley" style="width: ${hLey}%; height: 100%;" title="Saldo por Ley">
+                    ${hLey > 10 ? `<span>${hLey.toFixed(0)}%</span>` : ''}
+                </div>
+                <div class="bar-seg seg-mejora" style="width: ${porcTotalMejoras}%; height: 100%;" title="Mejora Art. 2448">
+                    ${porcTotalMejoras > 10 ? `<span>${porcTotalMejoras.toFixed(0)}%</span>` : ''}
+                </div>
+                <div class="bar-seg seg-test" style="width: ${hTest}%; height: 100%;" title="Testamento">
+                    ${hTest > 10 ? `<span>${hTest.toFixed(0)}%</span>` : ''}
                 </div>
             </div>
-            <button class="btn-opt" onclick="location.reload()" style="margin-top:25px; width:100%; padding: 1rem;">NUEVA CONSULTA</button>
         </div>
-    `;
+        <button class="btn-opt" onclick="location.reload()" style="margin-top:25px; width:100%; padding: 1rem;">NUEVA CONSULTA</button>
+    </div>
+`;
 
     const card = document.getElementById('question-card');
     if (card) {

@@ -1,9 +1,18 @@
+/* 1. VARIABLES GLOBALES (Unificadas) */
 :root {
-   --bg-dark: #1e2229; 
+    --bg-dark: #1e2229;
     --card-bg: #2d323c;
-    --accent: #ff8c00; 
+    --accent: #ff8c00;
     --text-light: #f4f4f4;
     --text-muted: #a0aab4;
+    --line: #444;
+    /* Variable faltante en tu código original */
+}
+
+/* 2. RESET Y CONFIGURACIÓN BASE */
+* {
+    box-sizing: border-box;
+    /* Previene el desplazamiento a la derecha */
 }
 
 body {
@@ -12,139 +21,22 @@ body {
     color: var(--text-light);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-}
-
-body {
-    background-color: var(--bg-dark);
-    background: radial-gradient(circle, #84a2e2 0%, #1e2229 100%);
-    color: var(--text-light);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-.app-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    width: 100%;
-}
-
-.wizard-section, .visual-section {
-    flex: 1;
-    min-width: 300px;
     display: flex;
     flex-direction: column;
+    /* Cambiamos a columna */
     align-items: center;
-    justify-content: center;
+    overflow-x: hidden;
+
 }
 
-.card {
-    background: var(--card-bg);
-    padding: 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    text-align: center;
-    width: 100%;
-}
-
-h2 {
-    color: var(--accent);
-    margin-bottom: 2rem;
-}
-
-.options {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.btn-opt {
-    background: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
-    padding: 0.8rem 2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.btn-opt:hover {
-    background: var(--accent);
-    color: var(--bg-dark);
-}
-
-#summary {
-    margin-top: 2rem;
-    font-size: 1.2rem;
-    color: var(--text-muted);
-}
-
-span {
-    color: var(--text-light);
-    font-weight: bold;
-}
-
-.info-acervo {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: rgba(255, 140, 0, 0.05); /* Un sutil tinte naranja */
-    border-left: 4px solid var(--accent);
-    border-radius: 8px;
-    max-width: 100%;
-}
-
-.info-acervo p {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--text-muted);
-    margin: 0;
-}
-
-.info-acervo strong {
-    color: var(--accent);
-}
-
-/* HEADER STYLES */
-:root {
-    --bg-dark: #1e2229; 
-    --card-bg: #2d323c;
-    --accent: #ff8c00; 
-    --text-light: #f4f4f4;
-    --text-muted: #a0aab4;
-    --line: #444; /* Variable faltante en tu código original */
-}
-
-/* CORRECCIÓN: Eliminamos el centrado flex del body para que el header suba */
-body {
-    background-color: var(--bg-dark);
-    background: radial-gradient(circle, #2c313c 0%, #1e2229 100%);
-    color: var(--text-light);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column; /* Cambiamos a columna */
-    align-items: center;
-}
-
-/* BARRA SUPERIOR FIJA ARRIBA */
+/* 3. BARRA DE NAVEGACIÓN (Fija arriba) */
 .navbar {
     width: 100%;
     background-color: #1a1a1a;
     border-bottom: 2px solid var(--accent);
     padding: 0.8rem 0;
-    position: fixed; /* Fijado arriba */
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
@@ -195,23 +87,32 @@ body {
     flex-wrap: wrap;
     gap: 2rem;
     padding: 2rem;
-    margin-top: 80px; /* Margen para que el header fijo no pise la app */
+    margin-top: 80px;
+    /* Margen para que el header fijo no pise la app */
     max-width: 1200px;
     width: 100%;
 }
 
-/* RESTO DE ESTILOS MANTENIDOS */
-.wizard-section, .visual-section {
+.wizard-section,
+.visual-section {
     flex: 1;
     min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
+/* 5. TARJETA (Consolidada) */
 .card {
     background: var(--card-bg);
     padding: 2.5rem;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     text-align: center;
+    width: 100%;
+    /* Para que ocupe su contenedor */
+    box-sizing: border-box;
 }
 
 h2 {
@@ -223,6 +124,7 @@ h2 {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .btn-opt {
@@ -241,12 +143,120 @@ h2 {
     color: var(--bg-dark);
 }
 
+/* 6. GRÁFICOS Y RESUMEN */
+.chart-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#summary {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
 .info-acervo {
     margin-top: 2rem;
     padding: 1.5rem;
     background: rgba(255, 140, 0, 0.05);
+    /* Un sutil tinte naranja */
     border-left: 4px solid var(--accent);
     border-radius: 8px;
+    max-width: 100%;
+}
+
+.info-acervo p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.info-acervo strong {
+    color: var(--accent);
+}
+
+span {
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+/* 7. ESTILOS DEL INFORME FINAL (Barra Lateral) */
+.report-container-final {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+    width: 100%;
+}
+
+.report-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--card-bg);
+
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* El área de la tabla */
+.report-content {
+
+    padding: 20px;
+    width: 100%;
+}
+
+/* La barra lateral ancha */
+.report-sidebar-bar {
+    width: 100% !important;
+    height: 45px;
+    /* Altura fija para que entren bien los números */
+    display: flex !important;
+    flex-direction: row !important;
+    /* Colores uno al lado del otro */
+    background: #1a1d23;
+    border-top: 1px solid var(--line);
+    margin: 0;
+    padding: 0;
+}
+
+.bar-seg {
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* Evita el amontonamiento */
+    transition: width 0.5s ease;
+}
+
+.bar-seg span {
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    /* Para que se lea bien sobre cualquier color */
+    pointer-events: none;
+    /* Para que el title del div siga funcionando al pasar el mouse */
+}
+
+.seg-leg {
+    background: #444;
+}
+
+.seg-ley {
+    background: #777;
+}
+
+.seg-test {
+    background: var(--accent);
+}
+
+.seg-mejora {
+    background: #b35900;
 }
 
 /* RESPONSIVE MOBILE */
@@ -260,7 +270,10 @@ h2 {
 }
 
 @media (max-width: 768px) {
-    .hamburger { display: block; }
+    .hamburger {
+        display: block;
+    }
+
     .nav-links {
         display: none;
         flex-direction: column;
@@ -272,64 +285,58 @@ h2 {
         border: 1px solid var(--line);
         border-radius: 8px;
         width: 200px;
+        z-index: 1001;
     }
-    .nav-links.show { display: flex; }
-    .app-container { flex-direction: column; }
+
+    .nav-links.show {
+        display: flex !important;
+    }
+
+    .app-container {
+        padding: 1rem;
+        margin-top: 70px;
+    }
+
+    .wizard-section,
+    .visual-section {
+        flex: none;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .visual-section {
+        min-height: auto;
+        /* Evita que fuerce altura innecesaria */
+        padding: 10px 0;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    #summary {
+        font-size: 1rem;
+        /* Achicamos un poco el texto del porcentaje central */
+        margin-top: 1rem;
+    }
+
+    .chart-box {
+        max-width: 180px !important;
+        /* Reducimos el tamaño de la rueda */
+        margin: 0 auto;
+    }
+
+    /* Ajustes específicos del informe en Mobile */
+    .report-content {
+        padding: 15px;
+    }
+
+    .report-sidebar-bar {
+        height: 40px;
+        /* Un poco más pequeña en mobile */
+    }
+
+    .bar-seg span {
+        font-size: 0.7rem;
+    }
 }
-
-/* Estilos para la barra lateral del informe */
-.report-layout {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-}
-
-.vertical-bar-container {
-    width: 30px;
-    height: 300px;
-    background: #333;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    flex-shrink: 0; /* Que no se achique */
-}
-
-.bar-seg { transition: height 0.5s ease; width: 100%; }
-.seg-leg { background: #5a6268; }
-.seg-ley { background: #888; }
-.seg-test { background: var(--accent); }
-
-/* Contenedor principal del informe para aprovechar el ancho */
-.report-wrapper {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 0; /* Pegado al borde */
-    background: var(--card-bg);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 20px;
-}
-
-/* El área de la tabla */
-.report-content {
-    flex: 1;
-    padding: 20px;
-}
-
-/* La barra lateral ancha */
-.report-sidebar-bar {
-    width: 60px; /* Más ancha */
-    display: flex;
-    flex-direction: column;
-    background: #222;
-    border-left: 1px solid var(--line);
-}
-
-.bar-seg { width: 100%; transition: height 0.5s ease; }
-.seg-leg { background: #444; }
-.seg-ley { background: #777; }
-.seg-test { background: var(--accent); }
