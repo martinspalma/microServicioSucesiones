@@ -5,6 +5,7 @@ let ramasHereditarias = [];
 let tempNombreHijo = "";
 let tempNombreNieto = "";
 let tempNombreHermano = "";
+let tempNombreCuarto = "";
 
 const estadoSucesion = {
     testamento: false,
@@ -38,7 +39,9 @@ let preguntas = [
     { id: 'testamento', texto: '¿Existe un testamento?', tipo: 'booleano', ayuda: 'La sucesión se abre por testamento o por ley [Art. 2277].' },
     { id: 'descendientes', texto: '¿Tiene hijos o descendientes?', tipo: 'booleano', ayuda: 'La porción legítima de los descendientes es de 2/3 [Art. 2445].' },
     { id: 'cant_hijos', texto: '¿Cuántos hijos tiene/tenía el causante?', tipo: 'numerico', ayuda: 'Los hijos heredan por partes iguales [Art. 2426].' },
+    { id: 'ascendientes', texto: '¿Viven los padres o ascendientes?', tipo: 'booleano', ayuda: 'A falta de descendientes, heredan los ascendientes [Art. 2431].' },
     { id: 'conyuge', texto: '¿Existe cónyuge supérstite?', tipo: 'booleano', ayuda: 'El cónyuge concurre con descendientes o ascendientes [Art. 2433].' }
+    
 ];
 
 // === 2. MANEJADOR DE RESPUESTAS ===
@@ -70,8 +73,11 @@ function handleAnswer(respuesta) {
         case 'descendientes':
             estadoSucesion.hayDescendientes = respuesta;
             if (!respuesta) {
-                preguntas = preguntas.filter(p => p.id !== 'cant_hijos');
-                inyectarPreguntaAscendientes();
+                preguntas = preguntas.filter(p =>
+                    p.id !== 'cant_hijos' &&
+                    p.id !== 'nombre_hijo' &&
+                    p.id !== 'hijo_vive'
+                );
             }
             break;
 
@@ -88,6 +94,7 @@ function handleAnswer(respuesta) {
             if (respuesta) {
                 ramasHereditarias.push({ nombre: tempNombreHijo, tipo: 'hijo' });
                 estadoSucesion.cantCabezas++;
+                preguntas = preguntas.filter(p => p.id !== 'ascendientes' && p.id !== 'cant_ascendientes');
             } else {
                 inyectarPreguntaNietos(tempNombreHijo);
             }
@@ -98,6 +105,7 @@ function handleAnswer(respuesta) {
             inyectarNietos(valorNum, ramaNietos, pActual.nombrePadre);
             ramasHereditarias.push(ramaNietos);
             estadoSucesion.cantCabezas++;
+            preguntas = preguntas.filter(p => p.id !== 'ascendientes' && p.id !== 'cant_ascendientes');
             break;
 
         case 'nombre_nieto':
@@ -119,6 +127,7 @@ function handleAnswer(respuesta) {
 
         case 'cant_bisnietos':
             inyectarBisnietos(valorNum, pActual.subRama, pActual.padreNombre);
+            preguntas = preguntas.filter(p => p.id !== 'ascendientes' && p.id !== 'cant_ascendientes');
             break;
 
         case 'nombre_bisnieto':
@@ -130,8 +139,6 @@ function handleAnswer(respuesta) {
             estadoSucesion.hayAscendientes = respuesta;
             if (respuesta) {
                 inyectarPreguntaCantAscendientes();
-            } else {
-                inyectarPreguntaHermanos(); // Si no hay ascendientes, saltamos a colaterales [Art. 2431, 2438]
             }
             break;
 
@@ -144,6 +151,10 @@ function handleAnswer(respuesta) {
         case 'conyuge':
             estadoSucesion.hayConyuge = respuesta;
             if (respuesta) estadoSucesion.cantCabezas++;
+            preguntas = preguntas.filter(p => p.id !== 'hermanos');
+            if (!estadoSucesion.hayDescendientes && !estadoSucesion.hayAscendientes && !respuesta) {
+                inyectarPreguntaHermanos();
+            }
             if (estadoSucesion.hayDescendientes || estadoSucesion.hayAscendientes) {
                 inyectarPreguntaMejora2448();
             }
@@ -185,31 +196,70 @@ function handleAnswer(respuesta) {
 
         case 'hermano_vive':
             if (respuesta) {
-                ramasHereditarias.push({
-                    nombre: tempNombreHermano,
-                    tipo: 'hermano',
-                    vinculo: pActual.esBilateralRef ? 'bilateral' : 'unilateral'
-                });
-                estadoSucesion.cantCabezas++;
-            } else {
-                inyectarPreguntaSobrinos(tempNombreHermano, pActual.esBilateralRef); // Derecho representación colateral [Art. 2439]
-            }
-            break;
-
+        ramasHereditarias.push({
+            nombre: tempNombreHermano,
+            tipo: 'hermano',
+            vinculo: pActual.esBilateralRef ? 'bilateral' : 'unilateral'
+        });
+        estadoSucesion.cantCabezas++;
+    } else {
+        // Sumamos una cabeza preventivamente para la estirpe
+        estadoSucesion.cantCabezas++; 
+        inyectarPreguntaSobrinos(tempNombreHermano, pActual.esBilateralRef);
+    }
+    break;
+// cuidado desde aca
         case 'cant_sobrinos':
-            const ramaSobrinos = {
-                nombre: `Estirpe de ${pActual.padreNombre}`,
-                tipo: 'estirpe_colateral',
-                vinculo: pActual.esBilateral ? 'bilateral' : 'unilateral',
-                integrantes: []
-            };
-            inyectarNombresSobrinos(valorNum, ramaSobrinos, pActual.padreNombre);
-            ramasHereditarias.push(ramaSobrinos);
-            break;
+    const totalSobrinosRama = valorNum;
+    
+    if (totalSobrinosRama === 0) {
+        estadoSucesion.cantCabezas--; // Restamos la cabeza que sumamos en hermano_vive
+        ramasHereditarias = ramasHereditarias.filter(r => r.nombre !== `Estirpe de ${pActual.padreNombre}`);
+        alert(`${pActual.padreNombre} no dejó descendencia. Su parte acrece a los demás.`);
+    } else {
+        const estirpe = {
+            nombre: `Estirpe de ${pActual.padreNombre}`,
+            tipo: 'estirpe_colateral',
+            vinculo: pActual.esBilateral ? 'bilateral' : 'unilateral',
+            integrantes: []
+        };
+        ramasHereditarias.push(estirpe);
+        // Llamamos a la función que ahora inyecta la pregunta de si vive
+        inyectarNombresSobrinos(totalSobrinosRama, estirpe, pActual.padreNombre);
+    }
+    break;
+
+case 'sobrino_vive':
+    if (respuesta) {
+        // Si vive, inyectamos la pregunta para pedir su nombre justo a continuación
+        preguntas.splice(pasoActual + 1, 0, {
+            id: 'nombre_sobrino',
+            nro: pActual.nro,
+            rama: pActual.rama,
+            padre: pActual.padre,
+            texto: `Nombre del sobrino ${pActual.nro} (hijo de ${pActual.padre}):`,
+            tipo: 'texto'
+        });
+    } else {
+        // REGLA LEGAL: Si el sobrino no vive, su parte no pasa a sus hijos (sobrinos nietos) 
+        // si hay otros parientes de grado más próximo vivos.
+        // Como restamos la cabeza preventivamente si NADIE vive, 
+        // aquí simplemente no lo agregamos a la rama de integrantes.
+        
+        // Si este era el único sobrino de esa estirpe, podrías manejar una alerta
+        console.log(`Rama de sobrino ${pActual.nro} de ${pActual.padre} descartada por fallecimiento.`);
+    }
+
+    break;
 
         case 'nombre_sobrino':
-            pActual.rama.integrantes.push({ nombre: valorText || "Sobrino", padreNombre: pActual.padre });
-            break;
+            if (pActual.rama && pActual.rama.integrantes) {
+        pActual.rama.integrantes.push({ 
+            nombre: valorText || "Sobrino", 
+            padreNombre: pActual.padre 
+        });
+    }
+    break;
 
         // --- 5. LÍNEA COLATERAL 3º Y 4º GRADO (Tíos y otros) ---
         case 'hay_tios':
@@ -221,14 +271,23 @@ function handleAnswer(respuesta) {
                 inyectarPreguntaCuartoGrado(); // A falta de 3º grado, buscamos 4º grado [Art. 2438]
             }
             break;
-        case 'nombre_vinculo_cuarto':
-            // El valorText contendrá algo como "Juan Pérez - Primo"
-            ramasHereditarias.push({
-                nombre: valorText || `Pariente 4to grado ${pActual.nro}`,
-                tipo: 'colateral_cuarto'
-            });
-            break;
+        // --- 5. LÍNEA COLATERAL 4º GRADO ---
 
+case 'nombre_cuarto_grado': // ID corregido para coincidir con tu función
+    // Guardamos el nombre en la variable temporal
+    tempNombreCuarto = valorText || `Pariente 4to grado ${pActual.nro}`;
+    // Opcional: Personalizamos la pregunta de los botones que sigue
+    preguntas[pasoActual + 1].texto = `¿Qué vínculo tiene ${tempNombreCuarto} con el causante?`;
+    break;
+
+case 'vinculo_cuarto_grado':
+    // Aquí 'respuesta' recibe el valor del botón (Primo hermano, etc.)
+    ramasHereditarias.push({
+        nombre: tempNombreCuarto,
+        tipo: 'colateral_cuarto',
+        rolDetalle: respuesta
+    });
+    break;
         case 'cant_tios':
             inyectarNombresTios(valorNum);
             break;
@@ -254,14 +313,7 @@ function handleAnswer(respuesta) {
         case 'cant_cuarto':
             inyectarNombresCuartoGrado(valorNum);
             break;
-
-        case 'vinculo_cuarto_grado':
-            ramasHereditarias.push({
-                nombre: tempNombreCuarto,
-                tipo: 'colateral_cuarto',
-                rolDetalle: respuesta
-            });
-            break;
+        
 
         // --- 6. CIERRE Y VACANCIA ---
         case 'check_vacancia':
@@ -335,7 +387,12 @@ function inyectarPreguntaCantAscendientes() {
 }
 
 function inyectarPreguntaHermanos() {
-    preguntas.push({ id: 'hermanos', texto: '¿Tenía el causante hermanos?', tipo: 'booleano', ayuda: 'A falta de herederos forzosos, heredan los colaterales [Art. 2438].' });
+   preguntas.splice(pasoActual + 1, 0, { 
+        id: 'hermanos', 
+        texto: '¿Existen hermanos o sobrinos vivos?', 
+        tipo: 'booleano', 
+        ayuda: 'Si no hay hermanos ni sobrinos vivos, heredan los tíos [Art. 2439].' 
+    });
 }
 
 function inyectarPreguntaCantHermanos() {
@@ -352,6 +409,7 @@ function inyectarPreguntasEstructuraHermanos(cant) {
     }
 }
 
+
 function inyectarPreguntaSobrinos(nombreHermano, esBilateral) {
     preguntas.splice(pasoActual + 1, 0,
         { id: 'cant_sobrinos', padreNombre: nombreHermano, esBilateral: esBilateral, texto: `¿Cuántos hijos (sobrinos) tenía ${nombreHermano}?`, tipo: 'numerico' }
@@ -361,7 +419,14 @@ function inyectarPreguntaSobrinos(nombreHermano, esBilateral) {
 function inyectarNombresSobrinos(cant, rama, padre) {
     for (let i = cant; i > 0; i--) {
         preguntas.splice(pasoActual + 1, 0,
-            { id: 'nombre_sobrino', rama: rama, padre: padre, texto: `Nombre del sobrino ${i} (hijo de ${padre}):`, tipo: 'texto' }
+            { 
+                id: 'sobrino_vive', 
+                nro: i, 
+                rama: rama, 
+                padre: padre, 
+                texto: `¿El hijo/sobrino nro ${i} de la estirpe de ${padre} vive actualmente?`, 
+                tipo: 'booleano' 
+            }
         );
     }
 }
@@ -530,24 +595,35 @@ function calcularDistribucionCompleta() {
         }
     }
     // 3. HERMANOS Y SOBRINOS: Desplazan a otros colaterales [Art. 2439]
+    // eliminar la gilada de geminis
     else if (estadoSucesion.hayHermanos) {
+        // FILTRO DEFINITIVO: Solo cuentan hermanos vivos o estirpes con al menos 1 sobrino vivo
+        const ramasActivas = ramasHereditarias.filter(r => 
+            r.tipo === 'hermano' || 
+            (r.tipo === 'estirpe_colateral' && r.integrantes && r.integrantes.length > 0)
+        );
+
         let totalPuntos = 0;
-        ramasHereditarias.forEach(r => {
-            // Bilaterales heredan el doble que unilaterales [Art. 2440]
+        ramasActivas.forEach(r => {
             totalPuntos += (r.vinculo === 'bilateral' ? 2 : 1);
         });
+
         const valorPunto = masaBase / (totalPuntos || 1);
 
-        ramasHereditarias.forEach(r => {
+        ramasActivas.forEach(r => {
             const cuotaRama = valorPunto * (r.vinculo === 'bilateral' ? 2 : 1);
             if (r.tipo === 'hermano') {
                 herederosFinales.push({ nombre: r.nombre, rol: `Hermano ${r.vinculo}`, pTotal: cuotaRama });
             } else {
-                // Sobrinos por representación [Art. 2439]
-                const cantSobrinos = r.integrantes.length || 1;
-                const nombreHermanoOriginal = r.nombre.replace("Estirpe de ", "");
+                const cantSobrinos = r.integrantes.length;
+                const nombreH = r.nombre.replace("Estirpe de ", "");
                 r.integrantes.forEach(s => {
-                    herederosFinales.push({ nombre: s.nombre, rol: 'Sobrino', padreNombre: nombreHermanoOriginal, pTotal: cuotaRama / cantSobrinos });
+                    herederosFinales.push({ 
+                        nombre: s.nombre, 
+                        rol: 'Sobrino', 
+                        padreNombre: nombreH, 
+                        pTotal: cuotaRama / cantSobrinos 
+                    });
                 });
             }
         });
@@ -838,7 +914,7 @@ function mostrarResultadoFinal() {
 
     if (!tieneLegitimarios && !estadoSucesion.vacante) {
         headerHtml += `<div style="background: rgba(255,140,0,0.1); border: 1px solid #ff8c00; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.8rem;">
-                        <strong>Aviso Legal:</strong> No existen herederos legitimarios (forzosos). El causante posee libre disponibilidad del 100% de los bienes [Art. 2444].
+                        <strong>Aviso Legal:</strong> No existen herederos legitimarios (forzosos). 
                       </div>`;
     }
 
@@ -956,7 +1032,7 @@ function mostrarResultadoFinal() {
     }
 
     // 4. ENSAMBLAJE FINAL (BARRA HORIZONTAL UNIFICADA)
-const fullReportHtml = `
+    const fullReportHtml = `
     <div class="report-container-final">
         ${headerHtml}
         <div class="report-wrapper">
