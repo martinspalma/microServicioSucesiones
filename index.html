@@ -11,27 +11,27 @@
 
 <body>
     <header class="navbar">
-    <div class="navbar-content">
-        <div class="brand">
-            <i class="fas fa-balance-scale"></i>
-            <span>Simulador Sucesiones</span>
+        <div class="navbar-content">
+            <div class="brand">
+                <i class="fas fa-balance-scale"></i>
+                <span>Simulador Sucesiones</span>
+            </div>
+
+            <button class="hamburger" id="btn-hamburguesa">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav class="nav-links" id="menu-links">
+
+                <a href="mapa.html" class="nav-item">
+                    <i class="fas fa-map"></i> Mapa Sucesorio
+                </a>
+                <a href="grados.html" class="nav-item">
+                    <i class="fas fa-layer-group"></i> Mapa de Grados
+                </a>
+            </nav>
         </div>
-
-        <button class="hamburger" id="btn-hamburguesa">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <nav class="nav-links" id="menu-links">
-            
-            <a href="mapa.html" class="nav-item">
-                <i class="fas fa-map"></i> Mapa Sucesorio
-            </a>
-            <a href="grados.html" class="nav-item">
-                <i class="fas fa-layer-group"></i> Mapa de Grados
-            </a>
-        </nav>
-    </div>
-</header>
+    </header>
 
     <main class="app-container">
         <section class="wizard-section">
@@ -54,10 +54,12 @@
 
                 <div id="options-select" style="display:none;"></div>
 
-                <div id="options-num" class="options" style="display: none;">
-                    <input type="number" id="input-cant" value="1" min="1" class="input-dark">
-                    <button class="btn-opt" id="btn-confirmar">CONFIRMAR</button>
-                </div>
+                <div id="options-num" class="options" style="display: none; flex-direction: row; align-items: center; gap: 10px;">
+    <button type="button" class="btn-step" onclick="document.getElementById('input-cant').stepDown()">-</button>
+    <input type="number" id="input-cant" value="1" min="1" class="input-dark input-cantidad">
+    <button type="button" class="btn-step" onclick="document.getElementById('input-cant').stepUp()">+</button>
+    <button class="btn-opt" id="btn-confirmar">OK</button>
+</div>
 
                 <div id="options-text" class="options" style="display: none;">
                     <input type="text" id="input-texto" placeholder="Ingrese nombre..." class="input-dark">
@@ -95,7 +97,7 @@
         const menuLinks = document.getElementById('menu-links');
 
         btnMenu.addEventListener('click', () => {
-            menuLinks.classList.toggle('show'); 
+            menuLinks.classList.toggle('show');
         });
     </script>
 </body>

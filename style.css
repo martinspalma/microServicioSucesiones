@@ -182,6 +182,11 @@ span {
     color: var(--text-light);
     font-weight: bold;
 }
+/* Estilo base para el input de texto */
+#input-texto {
+    transition: all 0.3s ease;
+    padding: 12px; /* Aumento general del padding */
+}
 
 /* 7. ESTILOS DEL INFORME FINAL (Barra Lateral) */
 .report-container-final {
@@ -258,6 +263,48 @@ span {
 
 .seg-mejora {
     background: #b35900;
+}
+/* 8 --Estilo específico para el selector de cantidad */
+.input-cantidad {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 10px;
+    width: 80px; /* Un poco más ancho para las flechas */
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    background: #252525;
+    color: white;
+}
+
+
+.btn-step {
+    background: #333;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-step:hover {
+    background: var(--accent);
+    color: #000;
+}
+
+.input-cantidad::-webkit-outer-spin-button,
+.input-cantidad::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Elimina las flechas en Firefox */
+.input-cantidad {
+    -moz-appearance: textfield;
 }
 
 /* RESPONSIVE MOBILE */
@@ -340,6 +387,13 @@ span {
     .bar-seg span {
         font-size: 0.7rem;
     }
+    #input-texto {
+        height: 60px;          /* Altura bien cómoda para el dedo */
+        font-size: 1.2rem;     /* Fuente un poco más grande para que se lea bien */
+        width: 80%;           /* Que ocupe todo el ancho disponible */
+        box-sizing: border-box; /* Asegura que el padding no desborde el ancho */
+    }
+    
 }
 
 /* --- COMPONENTES COMPARTIDOS: NAVBAR --- */
@@ -424,4 +478,89 @@ span {
     .hamburger {
         display: block;
     }
+}
+
+/* Contenedor principal de la mejora */
+.mejora-discapacidad-container {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    margin-top: 15px;
+}
+
+.mejora-discapacidad-container h3 {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+/* Etiquetas de texto */
+.mejora-discapacidad-container label {
+    display: block;
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs y Selects dentro de la mejora */
+.mejora-discapacidad-container input[type="text"],
+.mejora-discapacidad-container select {
+    width: 100%;
+    height: 50px; /* Altura cómoda */
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    padding: 0 15px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.mejora-discapacidad-container select:focus,
+.mejora-discapacidad-container input:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 140, 0, 0.2);
+}
+
+/* Lista de mejoras ya agregadas (El "carrito") */
+#lista-mejoras-agregadas {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.item-mejora {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2a2a2a;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--accent);
+}
+
+/* Botón de Agregar (Diferente al de Continuar) */
+.btn-agregar-mejora {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: bold;
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-agregar-mejora:hover {
+    background: var(--accent);
+    color: black;
 }

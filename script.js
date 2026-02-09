@@ -145,7 +145,7 @@ function handleAnswer(respuesta) {
         case 'cant_ascendientes':
             estadoSucesion.cantAscendientes = valorNum;
             estadoSucesion.cantCabezas += valorNum;
-            inyectarPreguntaMejora2448();
+            
             break;
 
         case 'conyuge':
@@ -698,41 +698,47 @@ function renderizarInterfazMejora() {
     let html = `
         <div class="mejora-discapacidad-container">
             <h3>Gestión de Mejora (Art. 2448)</h3>
-            <p style="font-size:0.85rem; margin-bottom:15px;">
-                Cupo máximo (1/3 de legítima): <strong>${estadoSucesion.topeMejora2448.toFixed(2)}%</strong><br>
-                Disponible: <span style="color:var(--accent); font-weight:bold;">${cupoDisponible}%</span>
-            </p>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <p style="font-size:0.85rem;">Máximo: <strong>${estadoSucesion.topeMejora2448.toFixed(2)}%</strong></p>
+                <p style="font-size:0.85rem; color:var(--accent);">Disponible: <strong>${cupoDisponible}%</strong></p>
+            </div>
 
-            <div id="lista-mejoras-agregadas" style="margin-bottom:15px;">
+            <div id="lista-mejoras-agregadas">
                 ${renderizarListaMejoras()}
             </div>
 
             ${cupoDisponible > 0 ? `
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px dashed #555;">
-                    <label style="display:block; margin-bottom:5px;">Nombre del Beneficiario:</label>
-                    <input type="text" id="mejora-nombre" list="herederos-sugeridos" placeholder="Escriba o seleccione..." style="width:100%; margin-bottom:10px;">
+                <div class="formulario-mejora">
+                    <label>Nombre del Beneficiario:</label>
+                    <input type="text" id="mejora-nombre" list="herederos-sugeridos" placeholder="Escriba o seleccione..." class="input-dark">
                     <datalist id="herederos-sugeridos">${opcionesHerederos}</datalist>
 
-                    <label style="display:block; margin-bottom:5px;">Vínculo Legal (Art. 2448):</label>
-<select id="mejora-vinculo" style="width:100%; margin-bottom:10px; background:#222; color:white; padding:8px; border:1px solid #555;">
-    <option value="Hijo/a">Hijo/a</option>
-    <option value="Nieto/a">Nieto/a</option>
-    <option value="Bisnieto/a">Bisnieto/a</option>
-    <option value="Padre/Madre">Padre/Madre</option>
-    <option value="Abuelo/a">Abuelo/a</option>
-    <option value="Bisabuelo/a">Bisabuelo/a</option>
-</select>
+                    <label>Vínculo Legal (Art. 2448):</label>
+                    <select id="mejora-vinculo" class="select-dark">
+                        <option value="Hijo/a">Hijo/a</option>
+                        <option value="Nieto/a">Nieto/a</option>
+                        <option value="Bisnieto/a">Bisnieto/a</option>
+                        <option value="Padre/Madre">Padre/Madre</option>
+                        <option value="Abuelo/a">Abuelo/a</option>
+                        <option value="Bisabuelo/a">Bisabuelo/a</option>
+                    </select>
 
-                    <label style="display:block; margin-bottom:5px;">Porcentaje (Máx ${cupoDisponible}%):</label>
-                    <input type="range" id="mejora-rango" min="0" max="${cupoDisponible}" step="0.1" value="0" 
-                           style="width:80%;" oninput="document.getElementById('display-val').textContent = this.value + '%'">
-                    <span id="display-val" style="font-weight:bold; margin-left:10px;">0%</span>
+                    <label>Porcentaje (Máx ${cupoDisponible}%):</label>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <input type="range" id="mejora-rango" min="0" max="${cupoDisponible}" step="0.1" value="0" 
+                               oninput="document.getElementById('display-val').textContent = this.value + '%'">
+                        <span id="display-val" style="font-weight:bold; color:var(--accent); min-width: 50px;">0%</span>
+                    </div>
                     
-                    <button class="btn-opt" onclick="ejecutarGuardarMejora()" style="margin-top:10px; background:var(--accent);">+ AGREGAR MEJORA</button>
+                    <button class="btn-agregar-mejora" onclick="ejecutarGuardarMejora()">
+                        <i class="fas fa-plus"></i> AGREGAR MEJORA
+                    </button>
                 </div>
-            ` : '<p style="color:#ff4444; font-size:0.8rem;">Ha alcanzado el límite máximo de mejora legal.</p>'}
+            ` : '<p style="color:#ff4444; font-size:0.8rem; text-align:center;">Límite alcanzado.</p>'}
 
-            <button class="btn-opt" onclick="finalizarMejoras()" style="margin-top:20px; width:100%; border: 1px solid #777;">CONTINUAR AL INFORME</button>
+            <button class="btn-opt" onclick="finalizarMejoras()" style="margin-top:20px; width:100%; border: 1px solid #777;">
+                CONTINUAR AL INFORME
+            </button>
         </div>
     `;
     card.innerHTML = html;
@@ -892,14 +898,15 @@ function updateUI() {
 function mostrarResultadoFinal() {
     const herederos = calcularDistribucionCompleta();
     const tieneLegitimarios = estadoSucesion.hayDescendientes || estadoSucesion.hayAscendientes || estadoSucesion.hayConyuge;
-    const porcTotalMejoras = estadoSucesion.totalMejorasAplicadas;
+    
 
     // 1. Ocultamos la sección visual original
     const visualSection = document.querySelector('.visual-section');
     if (visualSection) visualSection.style.display = 'none';
 
     // 2. Preparamos los porcentajes para la barra lateral
-    const hLeg = estadoSucesion.legitima || 0;
+    const porcTotalMejoras = estadoSucesion.totalMejorasAplicadas || 0;
+    const hLeg = (estadoSucesion.legitima || 0) - porcTotalMejoras; // Legítima neta
     const hLey = estadoSucesion.saldoAbIntestato || 0;
     const hTest = estadoSucesion.disponible_testada_final || 0;
 
@@ -1040,19 +1047,19 @@ function mostrarResultadoFinal() {
                 ${innerContent}
             </div>
             <div class="report-sidebar-bar">
-                <div class="bar-seg seg-leg" style="width: ${hLeg}%; height: 100%;" title="Legítima">
-                    ${hLeg > 10 ? `<span>${hLeg.toFixed(0)}%</span>` : ''}
-                </div>
-                <div class="bar-seg seg-ley" style="width: ${hLey}%; height: 100%;" title="Saldo por Ley">
-                    ${hLey > 10 ? `<span>${hLey.toFixed(0)}%</span>` : ''}
-                </div>
-                <div class="bar-seg seg-mejora" style="width: ${porcTotalMejoras}%; height: 100%;" title="Mejora Art. 2448">
-                    ${porcTotalMejoras > 10 ? `<span>${porcTotalMejoras.toFixed(0)}%</span>` : ''}
-                </div>
-                <div class="bar-seg seg-test" style="width: ${hTest}%; height: 100%;" title="Testamento">
-                    ${hTest > 10 ? `<span>${hTest.toFixed(0)}%</span>` : ''}
-                </div>
-            </div>
+    <div class="bar-seg seg-leg" style="width: ${hLeg}%; height: 100%;" title="Legítima Estricta">
+        ${hLeg > 5 ? `<span>${hLeg.toFixed(1)}%</span>` : ''}
+    </div>
+    <div class="bar-seg seg-mejora" style="width: ${porcTotalMejoras}%; height: 100%; background: #ffc107;" title="Mejora Art. 2448">
+        ${porcTotalMejoras > 5 ? `<span>${porcTotalMejoras.toFixed(1)}%</span>` : ''}
+    </div>
+    <div class="bar-seg seg-ley" style="width: ${hLey}%; height: 100%;" title="Saldo por Ley">
+        ${hLey > 5 ? `<span>${hLey.toFixed(1)}%</span>` : ''}
+    </div>
+    <div class="bar-seg seg-test" style="width: ${hTest}%; height: 100%;" title="Testamento">
+        ${hTest > 5 ? `<span>${hTest.toFixed(1)}%</span>` : ''}
+    </div>
+</div>
         </div>
         <button class="btn-opt" onclick="location.reload()" style="margin-top:25px; width:100%; padding: 1rem;">NUEVA CONSULTA</button>
     </div>
